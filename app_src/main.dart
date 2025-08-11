@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' show Point, Offset;
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
