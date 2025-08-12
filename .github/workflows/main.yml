@@ -1,0 +1,61 @@
+name: Android APK
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+
+      - name: Create Flutter Android scaffold
+        run: flutter create . --platforms=android --project-name osm_navigator
+
+      - name: Apply app sources (pubspec, main.dart, AndroidManifest)
+        run: |
+          cp -f app_src/pubspec.yaml pubspec.yaml
+          mkdir -p lib
+          cp -f app_src/main.dart lib/main.dart
+          mkdir -p android/app/src/main
+          cp -f app_src/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+
+      - name: Pin Android NDK version (fix plugin NDK mismatch)
+        shell: bash
+        run: |
+          if [ -f android/app/build.gradle.kts ]; then
+            sed -i -E '/^[[:space:]]*android[[:space:]]*\{/a\    ndkVersion = "28.1.13356709"' android/app/build.gradle.kts
+            echo 'Patched build.gradle.kts with ndkVersion'
+            grep -n 'ndkVersion' android/app/build.gradle.kts || true
+          elif [ -f android/app/build.gradle ]; then
+            sed -i -E '/^[[:space:]]*android[[:space:]]*\{/a\    ndkVersion "28.1.13356709"' android/app/build.gradle
+            echo 'Patched build.gradle with ndkVersion'
+            grep -n 'ndkVersion' android/app/build.gradle || true
+          else
+            echo 'No Gradle file found to patch' && ls -la android/app || true
+          fi
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build APK (release)
+        run: flutter build apk --release -v
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
