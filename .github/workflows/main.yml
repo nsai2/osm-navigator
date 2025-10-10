@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          CANDIDATE="$(find "$GITHUB_WORKSPACE" -maxdepth 3 -type f -name pubspec.yaml | head -n1)"
+          CANDIDATE="$(find "$GITHUB_WORKSPACE" -maxdepth 5 -type f -name pubspec.yaml | head -n1)"
           if [ -z "$CANDIDATE" ]; then
             echo "pubspec.yaml not found within $GITHUB_WORKSPACE" >&2
             exit 1
@@ -56,19 +56,21 @@ jobs:
 
       - name: Make gradlew executable
         working-directory: ${{ env.PROJECT_DIR }}/android
-        run: chmod +x gradlew
+        run: chmod +x gradlew || true
 
       - name: Assemble Release (Gradle)
         working-directory: ${{ env.PROJECT_DIR }}/android
         run: ./gradlew assembleRelease --no-daemon --stacktrace
 
-      - name: List APKs
+      - name: List ALL APKs (repo-wide)
         working-directory: ${{ env.PROJECT_DIR }}
         run: |
-          echo "=== APKs produced ==="
-          find android/app/build/outputs -name "*.apk" -type f -print || true
+          echo "=== APKs under project dir ==="
+          find . -type f -name "*.apk" -print || true
 
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: ${{ env.PROJECT_DIR }}/android/app/build/outputs/**/*.apk
+          path: |
+            **/*.apk
+          if-no-files-found: warn
