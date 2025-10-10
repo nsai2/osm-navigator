@@ -1,1 +1,1 @@
-SAITIS NAV v18 — Full feature app with smart workflow (auto-detects pubspec dir) + Gradle 8.11.1.
+SAITIS NAV v22 — Full project with Android platform present; main.yml auto-detects project dir; Gradle 8.11.1-all. Local build: cd android && ./gradlew assembleRelease

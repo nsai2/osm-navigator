@@ -1,7 +1,7 @@
 name: saitis_nav
-description: SAITIS NAV - MapLibre navigation with TTS, settings and raster styles
+description: SAITIS NAV - final consolidated full project
 publish_to: 'none'
-version: 18.0.0+18
+version: 22.0.0+22
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
