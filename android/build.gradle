@@ -1,0 +1,16 @@
+allprojects { repositories { google(); mavenCentral() } }
+
+subprojects { project ->
+    def androidExt = project.extensions.findByName("android")
+    if (androidExt != null) {
+        androidExt.compileOptions.sourceCompatibility = JavaVersion.VERSION_21
+        androidExt.compileOptions.targetCompatibility = JavaVersion.VERSION_21
+    }
+    if (project.name == "maplibre_gl" && androidExt != null) {
+        androidExt.compileOptions.sourceCompatibility = JavaVersion.VERSION_17
+        androidExt.compileOptions.targetCompatibility = JavaVersion.VERSION_17
+    }
+    plugins.withId("org.jetbrains.kotlin.android") {
+        kotlin { jvmToolchain(21) }
+    }
+}

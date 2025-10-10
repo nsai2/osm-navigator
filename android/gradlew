@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+DIR=`dirname "$0"`
+JAVA_CMD=${JAVA_HOME:-}/bin/java
+if [ ! -x "$JAVA_CMD" ]; then JAVA_CMD=java; fi
+exec "$JAVA_CMD" -Xmx64m -cp "$DIR/gradle/wrapper/gradle-wrapper.jar" org.gradle.wrapper.GradleWrapperMain "$@"
