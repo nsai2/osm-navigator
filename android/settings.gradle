@@ -1,15 +1,2 @@
-pluginManagement {
-  repositories { google(); mavenCentral(); gradlePluginPortal() }
-  def p = new Properties()
-  def lf = new File(settingsDir, "local.properties")
-  if (lf.exists()) lf.withInputStream { p.load(it) }
-  def flutterSdk = p.getProperty("flutter.sdk")
-  if (flutterSdk == null) throw new GradleException("flutter.sdk not set in local.properties")
-  includeBuild("${flutterSdk}/packages/flutter_tools/gradle")
-}
-plugins {
-  id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-  id "com.android.application" version "8.9.1" apply false
-  id "org.jetbrains.kotlin.android" version "2.1.0" apply false
-}
-include ":app"
+rootProject.name = 'saitis_nav'
+include ':app'

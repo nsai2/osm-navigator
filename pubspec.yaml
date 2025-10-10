@@ -1,7 +1,7 @@
 name: saitis_nav
-description: SAITIS NAV - final consolidated full project
+description: SAITIS NAV - consolidated full project (GitHub workflow uses Flutter CLI)
 publish_to: 'none'
-version: 22.0.0+22
+version: 23.0.0+23
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -10,14 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   maplibre_gl: ^0.24.0
-  geolocator: ^11.0.0
-  flutter_tts: ^3.8.5
-  permission_handler: ^11.4.0
-  shared_preferences: ^2.3.2
-  package_info_plus: ^8.0.2
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/images/triangle.png
-    - assets/images/dest.png
