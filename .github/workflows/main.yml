@@ -1,7 +1,6 @@
 name: Android APK
 on:
-  push:
-    branches: [ main, master ]
+  push: { branches: [ main, master ] }
   workflow_dispatch:
 
 jobs:
@@ -38,19 +37,10 @@ jobs:
         working-directory: ${{ env.PROJECT_DIR }}
         run: flutter pub get
 
-      - name: Ensure Android folder exists
-        working-directory: ${{ env.PROJECT_DIR }}
-        shell: bash
-        run: |
-          if [ ! -d android ]; then
-            echo "android/ not found. Generating Android platform with 'flutter create .'"
-            flutter create .
-          fi
-          ls -la android
-
       - name: Write android/local.properties (flutter.sdk)
         working-directory: ${{ env.PROJECT_DIR }}
         run: |
+          test -d android || (echo "Missing android/ folder — expected in repo" >&2; exit 1)
           echo "flutter.sdk=$(dirname $(dirname $(which flutter)))" > android/local.properties
           cat android/local.properties
 
@@ -62,7 +52,7 @@ jobs:
         working-directory: ${{ env.PROJECT_DIR }}/android
         run: ./gradlew assembleRelease --no-daemon --stacktrace
 
-      - name: List ALL APKs (repo-wide)
+      - name: List ALL APKs
         working-directory: ${{ env.PROJECT_DIR }}
         run: |
           echo "=== APKs under project dir ==="
@@ -72,5 +62,6 @@ jobs:
         with:
           name: app-release
           path: |
+            ${{ env.PROJECT_DIR }}/**/*.apk
             **/*.apk
-          if-no-files-found: warn
+          if-no-files-found: error
