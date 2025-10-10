@@ -38,6 +38,16 @@ jobs:
         working-directory: ${{ env.PROJECT_DIR }}
         run: flutter pub get
 
+      - name: Ensure Android folder exists
+        working-directory: ${{ env.PROJECT_DIR }}
+        shell: bash
+        run: |
+          if [ ! -d android ]; then
+            echo "android/ not found. Generating Android platform with 'flutter create .'"
+            flutter create .
+          fi
+          ls -la android
+
       - name: Write android/local.properties (flutter.sdk)
         working-directory: ${{ env.PROJECT_DIR }}
         run: |
