@@ -1,7 +1,7 @@
-name: saitis_nav
-description: SAITIS NAV - consolidated full project (GitHub workflow uses Flutter CLI)
+﻿name: saitis_nav
+description: SAITIS NAV - full GitHub project (v26)
 publish_to: 'none'
-version: 23.0.0+23
+version: 26.0.0+26
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
