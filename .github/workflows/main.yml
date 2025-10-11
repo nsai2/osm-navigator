@@ -20,36 +20,26 @@ jobs:
           channel: 'stable'
           java-version: '21'
 
-      - name: Detect Flutter project dir
-        id: detect
-        shell: bash
+      - name: Verify project root
         run: |
-          set -e
-          CANDIDATE="$(find "$GITHUB_WORKSPACE" -maxdepth 5 -type f -name pubspec.yaml | head -n1)"
-          if [ -z "$CANDIDATE" ]; then
-            echo "pubspec.yaml not found within $GITHUB_WORKSPACE" >&2
-            exit 1
-          fi
-          PROJECT_DIR="$(dirname "$CANDIDATE")"
-          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
-          echo "Detected project dir: $PROJECT_DIR"
+          test -f pubspec.yaml || (echo 'pubspec.yaml not found in repo root' >&2; exit 1)
+          test -d lib || (echo 'lib/ folder not found in repo root' >&2; exit 1)
 
-      - name: Flutter pub get
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: flutter pub get
-
-      - name: Build APK (Flutter CLI)
-        working-directory: ${{ env.PROJECT_DIR }}
+      - name: Flutter clean & pub get
         run: |
           flutter clean
-          flutter build apk --release --no-tree-shake-icons --verbose --no-pub
-          echo "=== APKs found (repo-wide) ==="
-          find . -type f -name "*.apk" -print || true
+          flutter pub get
+
+      - name: Build APK (Flutter CLI)
+        run: |
+          flutter build apk --release --no-tree-shake-icons --verbose
+          echo "=== APKs found ==="
+          find build -type f -name "*.apk" -print || true
 
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: |
-            ${{ env.PROJECT_DIR }}/**/*.apk
-            **/*.apk
-          if-no-files-found: warn
+            build/**/outputs/**/*.apk
+            build/**/*.apk
+          if-no-files-found: error
