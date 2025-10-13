@@ -1,2 +1,2 @@
-﻿rootProject.name = 'saitis_nav'
+rootProject.name = 'saitis_nav'
 include ':app'
