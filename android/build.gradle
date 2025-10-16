@@ -1,31 +1,19 @@
-plugins {
-  id "com.android.application"
-  id "org.jetbrains.kotlin.android"
-  id "dev.flutter.flutter-gradle-plugin"
-}
-
-android {
-  namespace "gr.ns.osm_navigator_ultra"
-  compileSdk 36
-
-  defaultConfig {
-    applicationId "gr.ns.osm_navigator_ultra"
-    minSdk 24
-    targetSdk 36
-    versionCode 1
-    versionName "1.0"
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
   }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-    }
+  dependencies {
+    // AGP 8.6.1 είναι συμβατό με Gradle 8.11.1 που κατεβάζει το runner
+    classpath 'com.android.tools.build:gradle:8.6.1'
+    // Kotlin 2.0.21 είναι επίσημα υποστηριζόμενο από AGP 8.6.x
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21"
   }
 }
 
-dependencies {
-  implementation "androidx.core:core-ktx:1.13.1"
-  implementation "androidx.appcompat:appcompat:1.7.0"
-  implementation "com.google.android.material:material:1.12.0"
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+  }
 }
