@@ -1,31 +1,69 @@
 plugins {
-  id "com.android.application"
-  id "org.jetbrains.kotlin.android"
-  id "dev.flutter.flutter-gradle-plugin"
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-  namespace "gr.ns.osm_navigator_ultra"
-  compileSdk 36
+    // ✅ ΒΑΛΕ εδώ το δικό σου namespace (ό,τι είχες ήδη)
+    namespace "gr.ns.osm_navigator_ultra"
 
-  defaultConfig {
-    applicationId "gr.ns.osm_navigator_ultra"
-    minSdk 24
-    targetSdk 36
-    versionCode 1
-    versionName "1.0"
-  }
+    compileSdk 34
 
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        applicationId "gr.ns.osm_navigator_ultra"
+        // Αν το έχεις στο παλιό σου αρχείο, κράτα την ίδια τιμή εδώ:
+        // applicationId "com.example.app"
+
+        minSdk 21
+        targetSdk 34
+
+        // Αν χρησιμοποιείς androidx.multidex, ξεσχολίασε:
+        // multiDexEnabled true
+        versionCode 1
+        versionName "1.0"
     }
-  }
+
+    buildTypes {
+        release {
+            // 🔧 Η σωστή ρύθμιση για να μην ξαναβγάλει το σφάλμα:
+            // Ενεργοποιούμε R8 (code shrinking) ΚΑΙ resource shrinking
+            minifyEnabled true
+            shrinkResources true
+
+            // Default κανόνες + το δικό μας proguard αρχείο
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                          'proguard-rules.pro'
+
+            // Υπογραφή (προαιρετική). Αν έχεις δική σου, κράτησέ τη όπως ήταν.
+            // signingConfig signingConfigs.release
+        }
+
+        debug {
+            // Συνήθως δεν κάνουμε shrink στο debug
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    // AGP 8.x / Kotlin 2.x -> Java 17 target
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    // Αν έχεις assets/flutter ρυθμίσεις ή ndk/cmake, κράτησέ τες όπως ήταν.
+    // packagingOptions μπορεί να μείνει κενό.
+    packagingOptions {
+        // examples (άφησέ το κενό αν δεν χρειάζεται)
+        // resources {
+        //     excludes += [ "META-INF/*" ]
+        // }
+    }
 }
 
-dependencies {
-  implementation "androidx.core:core-ktx:1.13.1"
-  implementation "androidx.appcompat:appcompat:1.7.0"
-  implementation "com.google.android.material:material:1.12.0"
-}
+// Το Flutter plugin φορτώνει τα απαραίτητα tasks.
+// Μην αλλάζεις κάτι άλλο εδώ.
